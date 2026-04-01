@@ -1,6 +1,11 @@
 {
   "files": [],
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/types": ["types/*"]
+    },
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
   },
