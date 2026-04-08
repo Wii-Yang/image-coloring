@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import zhCn from "element-plus/es/locale/lang/zh-cn";
-import { Delete, UploadFilled } from "@element-plus/icons-vue";
+import { Delete, Moon, Sunny, UploadFilled } from "@element-plus/icons-vue";
 import { computed, ref, watch } from "vue";
 import type { UploadUserFile } from "element-plus";
 import { imageColoring } from "./utils/image-coloring.ts";
+import { useDark } from "@vueuse/core";
 
 defineOptions({ name: "App" });
 
@@ -48,11 +49,19 @@ watch(
     }
   },
 );
+
+const isDark = useDark();
 </script>
 
 <template>
   <el-config-provider :locale="zhCn">
     <div class="app-box" v-loading="loading">
+      <el-switch
+        class="app-theme-switch"
+        v-model="isDark"
+        :active-action-icon="Moon"
+        :inactive-action-icon="Sunny"
+      />
       <h1 class="app-title">图片填色工具</h1>
       <div class="app-content">
         <div class="uploaded-box" v-if="currentFile">
@@ -92,7 +101,13 @@ watch(
 .app-box {
   width: 100vw;
   height: 100vh;
-  background-color: #141414;
+  position: relative;
+
+  .app-theme-switch {
+    position: absolute;
+    top: 16px;
+    right: 32px;
+  }
 
   .app-title {
     padding-top: 100px;
