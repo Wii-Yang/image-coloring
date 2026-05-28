@@ -1,0 +1,23 @@
+name: image coloring
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 获取源码
+        uses: actions/checkout@main
+
+      - name: 安装 pnpm
+        uses: npm install -g pnpm
+
+      - name: 初始化
+        uses: pnpm install
+
+      - name: 打包
+        uses: pnpm run build
+
+      - name: 传输包
+        uses: scp -r dist root@47.108.79.61:/root
