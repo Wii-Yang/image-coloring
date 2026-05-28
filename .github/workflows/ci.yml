@@ -8,16 +8,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 获取源码
-        uses: actions/checkout@main
+        uses: actions/checkout@master
 
       - name: 安装 pnpm
-        uses: npm install -g pnpm
+        run: npm install -g pnpm
 
       - name: 初始化
-        uses: pnpm install
+        run: pnpm install
 
       - name: 打包
-        uses: pnpm run build
+        run: pnpm run build
 
       - name: 传输包
-        uses: scp -r dist root@47.108.79.61:/root
+        run: scp -r dist root@47.108.79.61:/root
