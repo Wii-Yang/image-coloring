@@ -10,10 +10,9 @@ COPY . .
 
 # 2. 独立执行安装
 RUN npm config set registry https://registry.npmmirror.com \
-    && npm install -g pnpm@10.26.2 \
+    && npm install -g pnpm \
     && pnpm config set registry https://registry.npmmirror.com \
-    && echo "neverBuiltDependencies: []" > pnpm-workspace.yaml \
-    && pnpm install --no-frozen-lockfile \
+    && pnpm install \
     && pnpm run build \
     && tar -czv -C dist -f dist.tar.gz .
 
