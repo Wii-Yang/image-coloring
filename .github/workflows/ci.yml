@@ -1,23 +1,41 @@
-name: image coloring
+name: Deploy to Server
+
 on:
   push:
     branches:
-      - main
+      - main   # main分支提交触发
+
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: 获取源码
-        uses: actions/checkout@master
+      - name: 拉取代码
+        uses: actions/checkout
 
-      - name: 安装 pnpm
-        run: npm install -g pnpm
+      - name: 使用 Dockerfile 打包
+        run: docker buildx build --output type=local,dest=. .
 
-      - name: 初始化
-        run: pnpm install
+      - name: 上传
+        uses: appleboy/scp-action
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "dist.tar.gz"
+          target: "/home/ci/tmp"
 
-      - name: 打包
-        run: pnpm run build
-
-      - name: 传输包
-        run: scp -r dist root@47.108.79.61:/root
+      - name: 解压
+        uses: appleboy/ssh-action
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            mkdir -p /var/www/image-coloring
+            
+            # 解压
+            tar -xzf /home/ci/tmp/dist.tar.gz -C /var/www/image-coloring
+            
+            # 删除压缩包
+            rm -rf /home/ci/tmp/*
