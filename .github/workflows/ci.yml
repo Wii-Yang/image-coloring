@@ -3,7 +3,7 @@ name: Deploy to Server
 on:
   push:
     branches:
-      - main   # main分支提交触发
+      - main
 
 jobs:
   deploy:
@@ -11,13 +11,13 @@ jobs:
 
     steps:
       - name: 拉取代码
-        uses: actions/checkout
+        uses: actions/checkout@v4
 
       - name: 使用 Dockerfile 打包
         run: docker buildx build --output type=local,dest=. .
 
       - name: 上传
-        uses: appleboy/scp-action
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
@@ -25,17 +25,17 @@ jobs:
           source: "dist.tar.gz"
           target: "/home/ci/tmp"
 
-      - name: 解压
-        uses: appleboy/ssh-action
+      - name: 部署
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
             mkdir -p /var/www/image-coloring
-            
-            # 解压
+
+            rm -rf /var/www/image-coloring/*
+
             tar -xzf /home/ci/tmp/dist.tar.gz -C /var/www/image-coloring
-            
-            # 删除压缩包
-            rm -rf /home/ci/tmp/*
+
+            rm -f /home/ci/tmp/dist.tar.gz
