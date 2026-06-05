@@ -20,5 +20,4 @@ jobs:
         run: |
           mkdir -p /var/www/image-coloring
           rm -rf /var/www/image-coloring/*
-          tar -xzf /home/ci/tmp/dist.tar.gz -C /var/www/image-coloring
-          rm -f /home/ci/tmp/dist.tar.gz
+          cp -r dist/* /var/www/image-coloring/

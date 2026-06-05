@@ -13,9 +13,8 @@ RUN npm config set registry https://registry.npmmirror.com \
     && npm install -g pnpm \
     && pnpm config set registry https://registry.npmmirror.com \
     && pnpm install \
-    && pnpm run build \
-    && tar -czv -C dist -f dist.tar.gz .
+    && pnpm run build
 
 # === 第二阶段：导出阶段 ===
 FROM scratch AS exporter
-COPY --from=builder /app/dist.tar.gz /
+COPY --from=builder /app/dist /dist/
